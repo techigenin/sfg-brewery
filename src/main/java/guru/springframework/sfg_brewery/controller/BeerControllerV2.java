@@ -15,27 +15,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import guru.springframework.sfg_brewery.services.BeerService;
-import guru.springframework.sfg_brewery.web.model.BeerDto;
+import guru.springframework.sfg_brewery.services.v2.BeerServiceV2;
+import guru.springframework.sfg_brewery.web.model.v2.BeerDtoV2;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping(value = "/api/v1/beer")
+@RequestMapping(value = "/api/v2/beer")
 @RequiredArgsConstructor
-public class BeerController {
-	
-	private final BeerService beerService;
+public class BeerControllerV2 {
+
+	private final BeerServiceV2 beerService;
 
 	@GetMapping("/{beerId}")
-	public ResponseEntity<BeerDto> getBeer(@PathVariable("beerId") UUID beerId) {
-		BeerDto dto = beerService.getBeerById(beerId);
+	public ResponseEntity<BeerDtoV2> getBeer(@PathVariable("beerId") UUID beerId) {
+		BeerDtoV2 dto = beerService.getBeerById(beerId);
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 	
 	@PostMapping // Create new beer
-	public ResponseEntity<?> handlePost(@RequestBody BeerDto beerDTO) {
+	public ResponseEntity<?> handlePost(@RequestBody BeerDtoV2 beerDto) {
 		
-		BeerDto savedDto = beerService.saveNewBeer(beerDTO);
+		BeerDtoV2 savedDto = beerService.saveNewBeer(beerDto);
 		
 		HttpHeaders headers = new HttpHeaders();
 		// TODO add hostname to URL
@@ -45,7 +45,7 @@ public class BeerController {
 	}
 	
 	@PutMapping("/{beerId}")
-	public ResponseEntity<?> handleUpdate(@PathVariable("beerId") UUID beerId, @RequestBody BeerDto beerDto) {
+	public ResponseEntity<?> handleUpdate(@PathVariable("beerId") UUID beerId, @RequestBody BeerDtoV2 beerDto) {
 		beerService.updateBeer(beerId, beerDto);
 		
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -56,5 +56,4 @@ public class BeerController {
 	public void handleDelete(@PathVariable("beerId") UUID beerId) {
 		beerService.deleteById(beerId);
 	}
-	
 }
